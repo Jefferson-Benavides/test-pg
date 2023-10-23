@@ -1,24 +1,34 @@
 const express = require('express');
-const sequelize = require('./models/index');
-const Asociado = require('./models/asociado');
-
 const app = express();
-app.use(express.json());
+const Asociado = require('./models/asociado');
+const sequelize = require('./db');
+
 app.use(express.urlencoded({ extended: true }));
-
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.use(express.static(__dirname + '/public'));
 
-app.get('/', async (req, res) => {
-  try {
-    const asociados = await Asociado.findAll();
-    res.render('index', { asociados });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
+// Ruta para obtener una lista de asociados
+app.get('/asociados', async (req, res) => {
+  const asociados = await Asociado.findAll();
+  res.render('asociados', { asociados });
 });
 
-app.listen(3000, () => {
-  console.log('Servidor en ejecución en el puerto 3000');
+// Ruta para agregar un nuevo asociado
+app.post('/asociados', async (req, res) => {
+  const { tipo_identificacion_asociado, numero_identificacion_asociado, nombres_asociado, apellidos_asociado, fecha_nacimiento_asociado } = req.body;
+  await Asociado.create({ tipo_identificacion_asociado, numero_identificacion_asociado, nombres_asociado, apellidos_asociado, fecha_nacimiento_asociado });
+  res.redirect('/asociados');
+});
+
+// Ruta para eliminar un asociado
+app.post('/asociados/:id/delete', async (req, res) => {
+  const id = req.params.id;
+  await Asociado.destroy({ where: { id } });
+  res.redirect('/asociados');
+});
+
+sequelize.sync().then(() => {
+  app.listen(3000, () => {
+    console.log('Servidor en ejecución en http://localhost:3000');
+  });
 });

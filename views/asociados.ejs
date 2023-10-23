@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Asociados</title>
+  </head>
+  <body>
+    <h1>Lista de Asociados</h1>
+    <ul>
+      <% asociados.forEach((asociado) => { %>
+        <li><%= asociado.nombres_asociado %> <%= asociado.apellidos_asociado %> - <%= asociado.fecha_nacimiento_asociado %>
+          <form method="POST" action="/asociados/<%= asociado.id %>/delete">
+            <button>Eliminar</button>
+          </form>
+        </li>
+      <% }); %>
+    </ul>
+    <h2>Agregar un Asociado</h2>
+    <form method="POST" action="/asociados">
+      <label for="tipo_identificacion_asociado">Tipo de Identificación</label>
+      <input type="text" name="tipo_identificacion_asociado" required>
+      <br>
+      <label for="numero_identificacion_asociado">Número de Identificación</label>
+      <input type="number" name="numero_identificacion_asociado" required>
+      <br>
+      <label for="nombres_asociado">Nombres</label>
+      <input type="text" name="nombres_asociado" required>
+      <br>
+      <label for="apellidos_asociado">Apellidos</label>
+      <input type="text" name="apellidos_asociado" required>
+      <br>
+      <label for="fecha_nacimiento_asociado">Fecha de Nacimiento</label>
+      <input type="date" name="fecha_nacimiento_asociado" required>
+      <br>
+      <button type="submit">Agregar</button>
+    </form>
+  </body>
+</html>
